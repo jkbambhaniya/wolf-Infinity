@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Topic;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class PostController extends Controller
 {
@@ -25,9 +28,11 @@ class PostController extends Controller
 	 */
 	public function create()
 	{
-		return view('post.create', [
-			'title' => 'Add Post',
-		]);
+		$user = User::find(Auth::user()->id);
+		$post = new Post();
+		$post->user_id = $user->id;
+		$post->save();
+		return redirect(route('post.edit', $post->id));
 	}
 
 	/**
@@ -35,7 +40,28 @@ class PostController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		dd($request);
+		try {
+			$user = User::find(Auth::user()->id);
+			$post = new Post();
+			$post->user_id = $user->id;
+			$post->name = 'dasdasda';
+			$post->slug = 'sdfsdfsd';
+			$post->data = json_encode($request->data);
+			/* $requestArray = $request->safe()->all();
+			$requestArray['first_name'] = Str::title($requestArray['first_name']);
+			$requestArray['last_name'] = Str::title($requestArray['last_name']); */
+			$post->save();
+			return response()->json([
+				'id' =>  $post->id,
+				'status' =>  true,
+				'message' =>  __('messages.admin.topic_create_or_update_succ')
+			]);
+		} catch (Throwable $exception) {
+			return response()->json([
+				'status' =>  false,
+				'message' => $exception->getMessage()
+			]);
+		}
 	}
 
 	/**
@@ -51,7 +77,10 @@ class PostController extends Controller
 	 */
 	public function edit(Post $post)
 	{
-		//
+		return view('post.create', [
+			'title' => 'Add Post',
+			'post' => $post
+		]);
 	}
 
 	/**
@@ -59,7 +88,24 @@ class PostController extends Controller
 	 */
 	public function update(Request $request, Post $post)
 	{
-		dd($request);
+		try {
+			$user = User::find(Auth::user()->id);
+			$post->user_id = $user->id;
+			$post->name = 'dasdasda';
+			$post->slug = 'sdfsdfsd';
+			$post->data = json_encode($request->data);
+			$post->save();
+			return response()->json([
+				'id' =>  $post->id,
+				'status' =>  true,
+				'message' =>  __('messages.admin.topic_create_or_update_succ')
+			]);
+		} catch (Throwable $exception) {
+			return response()->json([
+				'status' =>  false,
+				'message' => $exception->getMessage()
+			]);
+		}
 	}
 
 	/**

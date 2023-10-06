@@ -91,7 +91,6 @@ h6,
 	border-radius: 50px;
 	border: 1px solid;
 	position: relative;
-	z-index: 1;
 	transition: 0.2s ease;
 }
 
@@ -1886,6 +1885,10 @@ span.cdx-checklist__item-checkbox-check {
 	color: #150946 !important;
 }
 
+.codex-editor__redactor {
+	padding-bottom: 80px !important;
+}
+
 a.btn-social,
 .btn-social {
 	border-radius: 50%;
@@ -2257,4 +2260,8 @@ a.btn-social,
 
 .btn-email:hover {
 	background-color: #6bd079;
+}
+
+.card-header {
+	border-bottom: 1PX solid #150946;
 }

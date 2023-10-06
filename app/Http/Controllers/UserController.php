@@ -38,10 +38,8 @@ class UserController extends Controller
 	public function update(UpdateProfileRequest $request)
 	{
 		try {
+			dd($request);
 			$user = User::find(Auth::user()->id);
-			$requestArray = $request->safe()->all();
-			$requestArray['first_name'] = Str::title($requestArray['first_name']);
-			$requestArray['last_name'] = Str::title($requestArray['last_name']);
 			$file = $request->file('image');
 			if ($request->avatar_remove == 1) {
 				if ($user->profile && Storage::exists($user->profile)) {

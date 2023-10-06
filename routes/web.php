@@ -53,4 +53,6 @@ Route::group(['middleware' => ['auth']], function () {
 		'show' => 'post.show',
 		'destroy' => 'post.destroy',
 	]);
+
+	Route::post('ajax/file/upload', [HomeController::class, 'imageUpload'])->name('ajax.file.upload');
 });

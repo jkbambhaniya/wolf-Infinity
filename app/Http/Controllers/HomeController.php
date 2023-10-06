@@ -9,6 +9,9 @@ use App\Models\User;
 use App\Models\TopicUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Traits\ImageUploadTrait;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\ImageUploadRequest;
 use App\Http\Requests\User\AddTopicRequest;
 
 class HomeController extends Controller
@@ -78,6 +81,31 @@ class HomeController extends Controller
 		} catch (Throwable $exception) {
 			return response()->json([
 				'status' =>  false,
+				'message' => $exception->getMessage()
+			]);
+		}
+	}
+
+	public function imageUpload(ImageUploadRequest $request)
+	{
+		try {
+			$user = User::find(Auth::user()->id);
+			$file = $request->file('image');
+			if ($request->type == 'attaches') {
+				$file = $request->file('file');
+			}
+			$path = '';
+			if ($file) {
+				$path = ImageUploadTrait::imageUpload($file, 'post/' . $user->id . '/' . $request->id);
+			}
+			return response()->json([
+				'url' => Storage::url($path),
+				'status' =>  true,
+				'message' =>  __('messages.admin.topic_create_or_update_succ')
+			]);
+		} catch (Throwable $exception) {
+			return response()->json([
+				'status' =>  0,
 				'message' => $exception->getMessage()
 			]);
 		}
